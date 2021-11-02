@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import logo from './logo.svg';
 import { Counter } from './features/counter/Counter';
 import './App.css';
+import cityApi from './api/cityApi';
 
 function App() {
+  useEffect(() => {
+    cityApi.getAll().then((response) => console.log(response.data));
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
