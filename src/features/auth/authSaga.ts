@@ -6,6 +6,12 @@ function* handleLogin(action: PayloadAction<LoginPayload>) {
   console.log('Handle login', action.payload);
   yield delay(1000);
   localStorage.setItem('access_token', 'fake_token');
+  yield put(
+    authActions.loginSuccess({
+      id: 1,
+      name: 'Minh Thong'
+    })
+  );
 }
 
 function* handleLogout() {
