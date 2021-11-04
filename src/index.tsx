@@ -7,14 +7,15 @@ import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
 import { CssBaseline } from '@material-ui/core';
-
+import { ConnectedRouter } from 'connected-react-router';
+import { history } from './utils';
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      <ConnectedRouter history={history}>
         <CssBaseline />
         <App />
-      </BrowserRouter>
+      </ConnectedRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
