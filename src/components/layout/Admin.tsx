@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { makeStyles, Box } from '@material-ui/core';
 import { Header, SideBar } from '../common';
 import { Route, Switch } from 'react-router';
@@ -26,6 +25,7 @@ const useStyles = makeStyles(them => ({
   main: {
     gridArea: 'main',
     backgroundColor: them.palette.background.paper,
+    padding: '20px'
   }
 }));
 
