@@ -46,7 +46,7 @@ export function AdminLayout () {
             <DashboardFeature />
           </Route>
 
-          <Route path="/admin/student"> 
+          <Route path="/admin/students"> 
             <StudentFeature />
           </Route>
         </Switch>
