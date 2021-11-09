@@ -1,7 +1,8 @@
 import { Box, Button, LinearProgress, Typography, makeStyles } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { selectStudentList, selectStudentLoading, studentActions } from '../studentSlice';
+import { selectStudentFilter, selectStudentList, selectStudentLoading, selectStudentPagination, studentActions } from '../studentSlice';
 import StudentList from './StudentList';
 
 const useStyles = makeStyles(theme => ({
@@ -20,6 +21,10 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     top: theme.spacing(-1),
     width: '100%'
+  },
+  pagination: {
+    display: 'flex',
+    justifyContent: 'center'
   }
 }));
 
@@ -27,17 +32,27 @@ export default function ListPage () {
   const dispatch = useAppDispatch();
   const classes = useStyles();
 
-  useEffect(() => {
-    dispatch(studentActions.fetchStudentList({
-      _page: 1,
-      _limit: 15
-    }));
-  }, []);
-
   const studentList = useAppSelector(selectStudentList);
   const loading = useAppSelector(selectStudentLoading);
+  const pagination = useAppSelector(selectStudentPagination);
+  const filter = useAppSelector(selectStudentFilter);
 
-  console.log('loading', loading);
+  const page = filter._page;
+  const limit = filter._limit ?? 1;
+  const totalRows = pagination?._totalRows ?? 0;
+  const totalPage = Math.ceil(totalRows/limit);
+
+  useEffect(() => {
+    dispatch(studentActions.fetchStudentList(filter));
+  }, [dispatch, filter]);
+
+  const handlePageChange = (e: any, page: number) => {
+    dispatch(studentActions.setFilter({
+      ...filter,
+      _page: page
+    }));
+  }
+
   return (
     <Box className = { classes.root }>
        { loading && <LinearProgress className= { classes.loading } /> }
@@ -48,6 +63,13 @@ export default function ListPage () {
         </Button>
       </Box>
       <StudentList studentList= { studentList || [] } />
+      <Box mt={2} className= { classes.pagination }>
+        <Pagination
+        count={ totalPage } 
+        page= { page } 
+        onChange= { handlePageChange } 
+        color="primary" />
+      </Box>
     </Box>
   );
 }
