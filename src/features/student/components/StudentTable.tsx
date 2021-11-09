@@ -30,7 +30,7 @@ export interface StudentListProps {
   onRemove?: (student: Student) => void;
 }
 
-export default function StudentList({ studentList, cityMap, onEdit, onRemove }: StudentListProps) {
+export default function StudentTable({ studentList, cityMap, onEdit, onRemove }: StudentListProps) {
   const classes = useStyles();
 
   return (
