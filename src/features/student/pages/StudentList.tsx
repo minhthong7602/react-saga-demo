@@ -10,17 +10,22 @@ import Paper from '@material-ui/core/Paper';
 import { Student } from '../../../models';
 import { Button } from '@material-ui/core';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   table: {
     
   },
-});
+  edit: {
+    marginRight: theme.spacing(2)
+  }
+}));
 
 export interface StudentListProps {
-  studentList: Student[]
+  studentList: Student[];
+  onEdit?: (student: Student) => void;
+  onRemove?: (student: Student) => void;
 }
 
-export default function StudentList({ studentList }: StudentListProps) {
+export default function StudentList({ studentList, onEdit, onRemove }: StudentListProps) {
   const classes = useStyles();
 
   return (
@@ -47,11 +52,11 @@ export default function StudentList({ studentList }: StudentListProps) {
               <TableCell>{ student.mark }</TableCell>
               <TableCell>{ student.city }</TableCell>
               <TableCell align="right">
-                <Button variant="contained" color="primary">
+                <Button className = { classes.edit } variant="contained" color="primary" onClick= { () => onEdit?.(student) }>
                   Edit
                 </Button>
 
-                <Button variant="outlined" color="secondary">
+                <Button variant="outlined" color="secondary" onClick= { () => onRemove?.(student) }>
                   Edit
                 </Button>
               </TableCell>
