@@ -2,6 +2,7 @@ import { Box, Button, LinearProgress, Typography, makeStyles } from '@material-u
 import { Pagination } from '@material-ui/lab';
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { selectCityMap } from '../../city/citySlice';
 import { selectStudentFilter, selectStudentList, selectStudentLoading, selectStudentPagination, studentActions } from '../studentSlice';
 import StudentList from './StudentList';
 
@@ -36,6 +37,7 @@ export default function ListPage () {
   const loading = useAppSelector(selectStudentLoading);
   const pagination = useAppSelector(selectStudentPagination);
   const filter = useAppSelector(selectStudentFilter);
+  const cityMap = useAppSelector(selectCityMap);
 
   const page = filter._page;
   const limit = filter._limit ?? 1;
@@ -62,7 +64,7 @@ export default function ListPage () {
           Add new student
         </Button>
       </Box>
-      <StudentList studentList= { studentList || [] } />
+      <StudentList studentList= { studentList || [] } cityMap = { cityMap } />
       <Box mt={2} className= { classes.pagination }>
         <Pagination
         count={ totalPage } 

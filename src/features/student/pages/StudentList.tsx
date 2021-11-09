@@ -7,8 +7,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { Student } from '../../../models';
-import { Button } from '@material-ui/core';
+import { Student, City } from '../../../models';
+import { Box, Button } from '@material-ui/core';
+import { capitalizeString, getMarkColor } from '../../../utils';
 
 const useStyles = makeStyles(theme => ({
   table: {
@@ -21,11 +22,15 @@ const useStyles = makeStyles(theme => ({
 
 export interface StudentListProps {
   studentList: Student[];
+  cityMap: {
+    [key: string]: City
+  };
+
   onEdit?: (student: Student) => void;
   onRemove?: (student: Student) => void;
 }
 
-export default function StudentList({ studentList, onEdit, onRemove }: StudentListProps) {
+export default function StudentList({ studentList, cityMap, onEdit, onRemove }: StudentListProps) {
   const classes = useStyles();
 
   return (
@@ -48,9 +53,13 @@ export default function StudentList({ studentList, onEdit, onRemove }: StudentLi
                 {index + 1}
               </TableCell>
               <TableCell>{ student.name }</TableCell>
-              <TableCell>{ student.gender }</TableCell>
-              <TableCell>{ student.mark }</TableCell>
-              <TableCell>{ student.city }</TableCell>
+              <TableCell>{ capitalizeString(student.gender) }</TableCell>
+              <TableCell>
+                <Box color= { getMarkColor(student.mark)}>
+                  { student.mark }
+                </Box>
+              </TableCell>
+              <TableCell>{ cityMap[student.city]?.name }</TableCell>
               <TableCell align="right">
                 <Button className = { classes.edit } variant="contained" color="primary" onClick= { () => onEdit?.(student) }>
                   Edit
