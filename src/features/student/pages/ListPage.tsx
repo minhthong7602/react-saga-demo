@@ -6,7 +6,7 @@ import { selectCityList, selectCityMap } from '../../city/citySlice';
 import { selectStudentFilter, selectStudentList, selectStudentLoading, selectStudentPagination, studentActions } from '../studentSlice';
 import StudentTable from '../components/StudentTable';
 import { StudentFilter } from '../components/StudentFilter';
-import { ListParams } from '../../../models';
+import { ListParams, Student } from '../../../models';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -62,6 +62,15 @@ export default function ListPage () {
     dispatch(studentActions.setFilterWithDebounce(newFilter));
   }
 
+  const handleFilterChange = (newFilter: ListParams) => {
+    dispatch(studentActions.setFilter(newFilter));
+  }
+
+  const handleRemoveStudent = (student: Student) => {
+    console.log('Remove student', student);
+    dispatch(studentActions.removeStudent(student));
+  }
+
   return (
     <Box className = { classes.root }>
        { loading && <LinearProgress className= { classes.loading } /> }
@@ -76,9 +85,10 @@ export default function ListPage () {
         filter = { filter } 
         cityList = { cityList }
         onSearchChange = { handleSearchChange }
+        onChange = { handleFilterChange }
       />
       </Box>
-      <StudentTable studentList= { studentList || [] } cityMap = { cityMap } />
+      <StudentTable studentList= { studentList || [] } cityMap = { cityMap } onRemove = { handleRemoveStudent }  />
       <Box mt={2} className= { classes.pagination }>
         <Pagination
         count={ totalPage } 
