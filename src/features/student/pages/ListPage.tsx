@@ -7,6 +7,8 @@ import { selectStudentFilter, selectStudentList, selectStudentLoading, selectStu
 import StudentTable from '../components/StudentTable';
 import { StudentFilter } from '../components/StudentFilter';
 import { ListParams, Student } from '../../../models';
+import { useHistory, useRouteMatch } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,8 +33,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ListPage () {
+export default function ListPage() {
+  const match = useRouteMatch();
   const dispatch = useAppDispatch();
+  const history = useHistory();
   const classes = useStyles();
 
   const studentList = useAppSelector(selectStudentList);
@@ -45,7 +49,7 @@ export default function ListPage () {
   const page = filter._page;
   const limit = filter._limit ?? 1;
   const totalRows = pagination?._totalRows ?? 0;
-  const totalPage = Math.ceil(totalRows/limit);
+  const totalPage = Math.ceil(totalRows / limit);
 
   useEffect(() => {
     dispatch(studentActions.fetchStudentList(filter));
@@ -67,34 +71,43 @@ export default function ListPage () {
   }
 
   const handleRemoveStudent = (student: Student) => {
-    console.log('Remove student', student);
     dispatch(studentActions.removeStudent(student));
   }
 
+  const handleEditStudent = (student: Student) => {
+    history.push(`${match.url}/${student.id}`)
+  }
+
   return (
-    <Box className = { classes.root }>
-       { loading && <LinearProgress className= { classes.loading } /> }
-      <Box className = { classes.titleContainer}>
+    <Box className={classes.root}>
+      {loading && <LinearProgress className={classes.loading} />}
+      <Box className={classes.titleContainer}>
         <Typography variant="h4">Students</Typography>
-        <Button variant="contained" color="primary">
-          Add new student
-        </Button>
+        <Link to={`${match.url}/add`} style={{ textDecoration: 'none' }}>
+          <Button variant="contained" color="primary">
+            Add new student
+          </Button>
+        </Link>
       </Box>
-      <Box mb = {3}>
-        <StudentFilter 
-        filter = { filter } 
-        cityList = { cityList }
-        onSearchChange = { handleSearchChange }
-        onChange = { handleFilterChange }
-      />
+      <Box mb={3}>
+        <StudentFilter
+          filter={filter}
+          cityList={cityList}
+          onSearchChange={handleSearchChange}
+          onChange={handleFilterChange}
+        />
       </Box>
-      <StudentTable studentList= { studentList || [] } cityMap = { cityMap } onRemove = { handleRemoveStudent }  />
-      <Box mt={2} className= { classes.pagination }>
+      <StudentTable
+        studentList={studentList || []}
+        cityMap={cityMap}
+        onRemove={handleRemoveStudent}
+        onEdit={handleEditStudent} />
+      <Box mt={2} className={classes.pagination}>
         <Pagination
-        count={ totalPage } 
-        page= { page } 
-        onChange= { handlePageChange } 
-        color="primary" />
+          count={totalPage}
+          page={page}
+          onChange={handlePageChange}
+          color="primary" />
       </Box>
     </Box>
   );
