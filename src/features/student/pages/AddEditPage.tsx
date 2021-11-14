@@ -1,27 +1,28 @@
 import { Box, Typography } from '@material-ui/core';
 import { ChevronLeft } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import studentApi from '../../../api/studentApi';
 import { Student } from '../../../models';
 import StudentForm from '../components/StudentForm';
 
 export default function AddEditPage() {
+  const history = useHistory();
   const { studentId } = useParams<{ studentId: string }>();
   const isEdit = Boolean(studentId);
   const [student, setStudent] = useState<Student>();
   useEffect(() => {
     if (!isEdit) return;
-
-    //IFFE
-    (async () => {
-      try {
-        const data: Student = await studentApi.getById(studentId);
+    let isMounted = true;
+    studentApi.getById(studentId).then((data: Student) => {
+      if (isMounted) {
         setStudent(data);
-      } catch (error) {
-        console.log('Failed to fetch student details', error);
       }
-    })();
+    });
+    return () => {
+      isMounted  = false;;
+    };
   }, [studentId]);
 
   const initialValues: Student = {
@@ -33,8 +34,23 @@ export default function AddEditPage() {
     ...student
   } as Student;
 
-  const handleStudentFormSubmit = (formValues: Student) => {
-
+  const handleStudentFormSubmit = async (formValues: Student) => {
+    if(isEdit) {
+      await studentApi.update(formValues.id || '', formValues);
+    } else {
+      await studentApi.add(formValues);
+    }
+    toast.success(isEdit ? 'Update student successfully' : 'Add student successfully', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    // Redirect back to student list
+    history.push('/admin/students');
   }
 
   return (

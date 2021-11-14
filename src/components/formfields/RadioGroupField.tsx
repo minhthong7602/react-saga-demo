@@ -28,8 +28,8 @@ export function RadioGroupField({ name, control, label, disabled, options }: Rad
       <FormLabel component="legend">{ label }</FormLabel>
       <RadioGroup aria-label="gender" name="gender1" value={value} onChange={ onChange  }>
         {
-          options.map((option) => (
-            <FormControlLabel value={ option.value } control={<Radio />} label={ option.label } />
+          options.map((option, index) => (
+            <FormControlLabel key={index} value={ option.value } control={<Radio />} label={ option.label } />
           ))
         }
       </RadioGroup>

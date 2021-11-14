@@ -43,6 +43,12 @@ export const selectCityMap = createSelector(selectCityList, (cityList) =>
     }, {})
 );
 
+export const selectCityOptions = createSelector(selectCityList, (cityList) => 
+  cityList.map(c => ({
+    value: c.code,
+    label: c.name
+})));
+
 // Reducer
 const cityReducer = citySlice.reducer;
 export default cityReducer;
